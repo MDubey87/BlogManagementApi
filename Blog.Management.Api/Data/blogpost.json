@@ -1,10 +1,1 @@
-[
-  [
-    {
-      "Id": "6a5f4761-ac01-4407-a81b-831a28894f0f",
-      "UserName": "Ashish Mishra",
-      "DateCreated": "2024-10-23",
-      "Content": "In building Angular application,most of the time we use the Router to render different pages for different urls, and based on the url we also load the data based on its path parameters or query parameters. \nThanks Happy Learning!!"
-    }
-  ]
-]
+[{"Id":"6a5f4761-ac01-4407-a81b-831a28894f0f","UserName":"Ashish Mishra","DateCreated":"2024-10-23","Content":"In building Angular application,most of the time we use the Router to render different pages for different urls, and based on the url we also load the data based on its path parameters or query parameters. \nThanks Happy Learning!!"},{"Id":"bd7e6288-bd9f-4db9-bfa1-125a69155240","UserName":"Manish Dubey","DateCreated":"2024-10-17","Content":"It's better than options like to run the sync methods in Task.Run(()=>File.ReadAllLines(...)), since its a very bad practice to wrap your sync code with Task.Run and expect this to be full async flow. \\ Actually, it breaks the internal queues mechanism of the real asynchronous dotnet structure."}]
