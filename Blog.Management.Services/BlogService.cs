@@ -17,20 +17,20 @@ namespace Blog.Management.Services
         /// Get List of All Blogs
         /// </summary>
         /// <returns></returns>
-        public List<BlogPost> GetAllBlogs();
+        public Task<List<BlogPost>> GetAllBlogs();
         /// <summary>
         /// Get Blog by Blog Id
         /// </summary>
         /// <param name="id">Blog Id</param>
         /// <returns>Blog Post</returns>
-        public BlogPost? GetBlogById(Guid id);
+        public Task<BlogPost?> GetBlogById(Guid id);
 
         /// <summary>
         /// Create New Blog
         /// </summary>
         /// <param name="newBlog">New Blog Request Model</param>
         /// <returns>Created Blog</returns>
-        public BlogPost CreateBlog(BlogPost newBlog);
+        public Task<BlogPost> CreateBlog(BlogPost newBlog);
 
         /// <summary>
         /// Update Existing Blog
@@ -38,13 +38,13 @@ namespace Blog.Management.Services
         /// <param name="id">Blog Id</param>
         /// <param name="updatedBlog">Updated Blog Request Model</param>
         /// <returns>Updated Blog</returns>
-        public BlogPost? UpdateBlog(Guid id, BlogPost updatedBlog);
+        public Task<BlogPost?> UpdateBlog(Guid id, BlogPost updatedBlog);
         /// <summary>
         /// Delete Existing Blog
         /// </summary>
         /// <param name="id">Blog Id</param>
         /// <returns>Return Deleted Blog</returns>
-        public BlogPost? DeleteBlog(Guid id);
+        public Task<BlogPost?> DeleteBlog(Guid id);
     }
     /// <summary>
     /// Blog Service Implementation
@@ -52,30 +52,30 @@ namespace Blog.Management.Services
     public class BlogService : IBlogServcie
     {
         /// <inheritdoc/>>
-        public List<BlogPost> GetAllBlogs()
+        public async Task<List<BlogPost>> GetAllBlogs()
         {
-            return JsonFileHelper.ReadFromJsonFile<BlogPost>();
+            return await JsonFileHelper.ReadFromJsonFile<BlogPost>();
         }
         /// <inheritdoc/>>
-        public BlogPost? GetBlogById(Guid id)
+        public async Task<BlogPost?> GetBlogById(Guid id)
         {
-            var blogs = JsonFileHelper.ReadFromJsonFile<BlogPost>();
+            var blogs = await JsonFileHelper.ReadFromJsonFile<BlogPost>();
             var blog = blogs.FirstOrDefault(p => p.Id == id);
             return blog;
         }
         /// <inheritdoc/>>
-        public BlogPost CreateBlog(BlogPost newBlog)
+        public async Task<BlogPost> CreateBlog(BlogPost newBlog)
         {
-            var blogs = JsonFileHelper.ReadFromJsonFile<BlogPost>();
+            var blogs = await JsonFileHelper.ReadFromJsonFile<BlogPost>();
             newBlog.Id = Guid.NewGuid();
             blogs.Add(newBlog);
             JsonFileHelper.WriteToJsonFile(blogs);
             return newBlog;
         }
         /// <inheritdoc/>>
-        public BlogPost? UpdateBlog(Guid id, BlogPost updatedBlog)
+        public async Task<BlogPost?> UpdateBlog(Guid id, BlogPost updatedBlog)
         {
-            var blogs = JsonFileHelper.ReadFromJsonFile<BlogPost>();
+            var blogs = await JsonFileHelper.ReadFromJsonFile<BlogPost>();
             var blog = blogs.FirstOrDefault(p => p.Id == id);
 
             if (blog == null)
@@ -91,9 +91,9 @@ namespace Blog.Management.Services
             return blog;
         }
         /// <inheritdoc/>>
-        public BlogPost? DeleteBlog(Guid id)
+        public async Task<BlogPost?> DeleteBlog(Guid id)
         {
-            var blogs = JsonFileHelper.ReadFromJsonFile<BlogPost>();
+            var blogs = await JsonFileHelper.ReadFromJsonFile<BlogPost>();
             var blog = blogs.FirstOrDefault(p => p.Id == id);
 
             if (blog == null)

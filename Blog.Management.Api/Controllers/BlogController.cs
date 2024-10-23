@@ -31,10 +31,14 @@ namespace Blog.Management.Api.Controllers
         /// </summary>
         /// <returns></returns>
         [HttpGet]
-        public ActionResult<List<BlogResponse>> GetBlogs()
+        [ProducesResponseType(typeof(List<BlogResponse>), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status404NotFound)]
+        [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status500InternalServerError)]
+        public async Task<IActionResult> GetBlogs()
         {
-            var blogs= _blogServcie.GetAllBlogs();
-            return _mapper.Map<List<BlogResponse>>(blogs);
+            var blogs= await _blogServcie.GetAllBlogs();
+            return Ok(_mapper.Map<List<BlogResponse>>(blogs));
         }
         /// <summary>
         /// Get Blog By BlogId
@@ -43,11 +47,15 @@ namespace Blog.Management.Api.Controllers
         /// <returns>Blog Post</returns>
 
         [HttpGet("{id}")]
-        public ActionResult<BlogResponse> GetBlogById(Guid id)
+        [ProducesResponseType(typeof(BlogResponse), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status404NotFound)]
+        [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status500InternalServerError)]
+        public async Task<IActionResult> GetBlogById(Guid id)
         {
-            var blog = _blogServcie.GetBlogById(id);
+            var blog = await _blogServcie.GetBlogById(id);
             if (blog == null) return NotFound();
-            return _mapper.Map<BlogResponse>(blog);
+            return Ok(_mapper.Map<BlogResponse>(blog));
         }
         /// <summary>
         /// Create New Blog
@@ -55,14 +63,18 @@ namespace Blog.Management.Api.Controllers
         /// <param name="newBlog">Blog Request Model</param>
         /// <returns>New Blog Post</returns>
         [HttpPost]
-        public ActionResult CreateBlog([FromBody] BlogRequest newBlog)
+        [ProducesResponseType(typeof(string), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status404NotFound)]
+        [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status500InternalServerError)]
+        public async Task<IActionResult> CreateBlog([FromBody] BlogRequest newBlog)
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
-            var blog = _blogServcie.CreateBlog(_mapper.Map<BlogPost>(newBlog));
-            return Ok();
+            var blog = await _blogServcie.CreateBlog(_mapper.Map<BlogPost>(newBlog));
+            return Ok(blog.Id);
         }
 
         /// <summary>
@@ -73,13 +85,17 @@ namespace Blog.Management.Api.Controllers
         /// <returns>Update Status</returns>
 
         [HttpPut("{id}")]
-        public ActionResult UpdateBlog([Required]Guid id, [FromBody] BlogRequest updatedBlog)
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status404NotFound)]
+        [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status500InternalServerError)]
+        public async Task<IActionResult> UpdateBlog([Required]Guid id, [FromBody] BlogRequest updatedBlog)
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
-            var blog = _blogServcie.UpdateBlog(id, _mapper.Map<BlogPost>(updatedBlog));
+            var blog = await _blogServcie.UpdateBlog(id, _mapper.Map<BlogPost>(updatedBlog));
             if (blog == null) return NotFound();
             return Ok();
         }
@@ -90,9 +106,13 @@ namespace Blog.Management.Api.Controllers
         /// <param name="id">Blog Id</param>
         /// <returns>Delete Status</returns>
         [HttpDelete("{id}")]
-        public ActionResult DeletePerson(Guid id)
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status404NotFound)]
+        [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status500InternalServerError)]
+        public async Task<IActionResult> DeletePerson(Guid id)
         {
-            var blog = _blogServcie.DeleteBlog(id);
+            var blog = await _blogServcie.DeleteBlog(id);
             if (blog == null) return NotFound();
             return Ok();
         }

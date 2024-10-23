@@ -1,4 +1,7 @@
 ﻿using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
+using System.Collections.Generic;
+using System.Reflection.PortableExecutable;
 
 namespace Blog.Management.Services.Helpers
 {
@@ -6,18 +9,19 @@ namespace Blog.Management.Services.Helpers
     {
         private static readonly string JsonFilePath = @"Data/blogpost.json";
 
-        public static List<T> ReadFromJsonFile<T>()
+        public static async Task<List<T>> ReadFromJsonFile<T>()
         {
             try
             {
                 using StreamReader file = File.OpenText(JsonFilePath);
                 JsonSerializer serializer = new JsonSerializer();
-                var d = serializer.Deserialize(new JsonTextReader(file), typeof(List<T>));
-                if (d == null)
+                string json = await file.ReadToEndAsync();
+                var content= JsonConvert.DeserializeObject<List<T>>(json);
+                if (content == null)
                 {
                     return new List<T>();
                 }
-                return (List<T>)d;
+                return content;
             }
             catch
             {
@@ -25,13 +29,13 @@ namespace Blog.Management.Services.Helpers
             }
         }
 
-        public static void WriteToJsonFile<T>(List<T> data)
+        public static async Task WriteToJsonFile<T>(List<T> data)
         {
             try
             {
                 using StreamWriter file = File.CreateText(JsonFilePath);
                 JsonSerializer serializer = new JsonSerializer();
-                serializer.Serialize(file, data);
+                await Task.Run(()=>serializer.Serialize(file, data));
             }
             catch
             {
